@@ -1,5 +1,7 @@
 package de.apolinarski.tools.slack.mail2slack;
 
+import java.time.LocalDateTime;
+
 public class ServerSingleton {
 
 	public static final ServerSingleton SINGLETON = new ServerSingleton();
@@ -46,6 +48,7 @@ public class ServerSingleton {
 		}
 		while(RUNNING)
 		{
+			System.out.println(LocalDateTime.now()+" Checking for new mails.");
 			server.readAndPost();
 			try
 			{

@@ -35,24 +35,14 @@ public class SlackSender {
 		HttpPost post = new HttpPost(webhook);
 		post.setHeader(HttpHeaders.CONTENT_TYPE,ContentType.APPLICATION_JSON.toString());
 		JsonObject jsonObject = createJson(message);
-		Charset charset;
-		try
-		{
-			charset = Charset.forName(message.getCharset());
-		}
-		catch(Exception e)
-		{
-			//Could not find charset:
-			System.err.println("Could not find charset: "+message.getCharset()+" using default charset: "+DEFAULT_CHARSET);
-			charset = Charset.forName(DEFAULT_CHARSET);
-		}
+		Charset charset = Charset.forName(DEFAULT_CHARSET);
 		post.setEntity(new StringEntity(jsonObject.toString(),charset));
 		try (CloseableHttpClient client = HttpClientBuilder.create().build())
 		{
 			HttpResponse response = client.execute(post);
 			System.out.println("Response code is: "+response.getStatusLine().getStatusCode());
-			System.out.println();
 			response.getEntity().writeTo(System.out);
+			System.out.println();
 			response.getEntity().consumeContent();
 		}
 		catch (IOException e)

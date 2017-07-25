@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
-import javax.mail.Flags;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -48,7 +47,7 @@ public class GmailServer implements IMailServer {
 			inbox.open(Folder.READ_WRITE);
 			for(Message message : inbox.getMessages())
 			{
-				if(!message.isSet(Flag.RECENT))
+				if((!message.isSet(Flag.RECENT) && (message.isSet(Flag.SEEN))))
 				{
 					//Check age and delete
 					LocalDate date = message.getReceivedDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -100,7 +99,7 @@ public class GmailServer implements IMailServer {
 					Object content = message.getContent();
 					if(content instanceof String)
 					{
-						messageContent = decodeStringWithCharset((String) content,message);
+						messageContent = decodeAndShortenString((String) content,message);
 					}
 					else if(content instanceof Multipart)
 					{
@@ -114,7 +113,7 @@ public class GmailServer implements IMailServer {
 								Object multipartContentObject = bPart.getContent();
 								if(multipartContentObject instanceof String)
 								{
-									messageContent = decodeStringWithCharset((String) multipartContentObject, bPart);
+									messageContent = decodeAndShortenString((String) multipartContentObject, bPart);
 									break;
 								}
 								else
@@ -142,8 +141,6 @@ public class GmailServer implements IMailServer {
 						.setText(messageContent)
 						.setUserName(userName);
 				ServerSingleton.SINGLETON.sendMessage(sm);
-				// Delete message
-//				message.setFlag(Flags.Flag.DELETED, true);
 			}
 			inbox.close(true);
 			store.close();
@@ -154,7 +151,7 @@ public class GmailServer implements IMailServer {
 		}
 	}
 
-	private String decodeStringWithCharset(String content, Part message) {
+	private String decodeAndShortenString(String content, Part message) {
 		if(content.length()>settings.getMaxMessageSize())
 		{
 			StringBuilder sb = new StringBuilder();
