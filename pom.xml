@@ -30,6 +30,9 @@
     <artifactId>maven-assembly-plugin</artifactId>
     <version>3.0.0</version>
     <configuration>
+     <descriptors>
+       <descriptor>src/assembly/bin.xml</descriptor>
+     </descriptors>
       <descriptorRefs>
         <descriptorRef>jar-with-dependencies</descriptorRef>
       </descriptorRefs>

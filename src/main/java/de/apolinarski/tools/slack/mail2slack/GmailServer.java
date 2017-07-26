@@ -54,6 +54,7 @@ public class GmailServer implements IMailServer {
 					LocalDate maxDate = date.plusDays(settings.getDeleteOldMesagesDays());
 					if(LocalDate.now().isAfter(maxDate))
 					{
+						System.err.println("Deleted mail that is older than 14 days.");
 						message.setFlag(Flag.DELETED, true);
 					}
 					continue;
@@ -61,6 +62,7 @@ public class GmailServer implements IMailServer {
 				String channel = extractChannel(message.getSubject());
 				if(channel==null)
 				{
+					System.err.println("Channel is invalid: "+message.getSubject());
 					message.setFlag(Flag.DELETED, true);
 					continue;
 				}
@@ -71,6 +73,7 @@ public class GmailServer implements IMailServer {
 					InternetAddress[] userNameAddress=(InternetAddress[]) message.getFrom();
 					if(userNameAddress==null || userNameAddress.length==0 || userNameAddress[0]==null)
 					{
+						System.err.println("No valid user name address!");
 						message.setFlag(Flag.DELETED, true);
 						continue;
 					}
@@ -81,6 +84,7 @@ public class GmailServer implements IMailServer {
 						userName = userNameAddress[0].getAddress();
 						if(userName==null)
 						{
+							System.err.println("No valid user name!");
 							message.setFlag(Flag.DELETED, true);
 							continue;
 						}
