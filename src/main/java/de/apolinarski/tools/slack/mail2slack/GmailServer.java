@@ -3,6 +3,7 @@ package de.apolinarski.tools.slack.mail2slack;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
@@ -171,18 +172,32 @@ public class GmailServer implements IMailServer {
 	}
 
 	private String getIcon(InternetAddress address) {
-		// TODO Auto-generated method stub
+		String[] pairs=settings.getUserIconPairs();
+		for(String userIconPair : pairs)
+		{
+			userIconPair = userIconPair.trim();
+			String[] pair = userIconPair.split(Settings.USER_ICON_PAIR_SPLIT, 2);
+			if(pair.length!=2)
+			{
+				System.err.println("Invalid user-icon-pair: "+Arrays.toString(pair));
+				continue;
+			}
+			if(pair[0].equals(address.getAddress()))
+			{
+				return pair[1];
+			}
+		}
 		return null;
 	}
 
 	private String extractChannel(String subject) {
-		if(subject.matches("\\[.*\\]"))
+		if(subject.matches(".*\\[.*\\].*"))
 		{
 			int indexLeftBracket = subject.indexOf(OPEN_BRACKET_SUBJECT);
 			int indexRightBracket = subject.substring(indexLeftBracket).indexOf(CLOSE_BRACKET_SUBJECT);
 			if(indexRightBracket != -1)
 			{
-				String result=subject.substring(indexLeftBracket+1, indexRightBracket);
+				String result=subject.substring(indexLeftBracket+1, indexLeftBracket+indexRightBracket);
 				if(!result.startsWith(CHANNEL_START))
 				{
 					StringBuilder sb = new StringBuilder()

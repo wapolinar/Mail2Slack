@@ -27,6 +27,8 @@ public class Settings {
 	private static final String MAX_MESSAGE_SIZE="MAX-MESSAGE-SIZE";
 	private static final int MAX_MESSAGE_SIZE_DEFAULT = 250;
 	
+	public static final String USER_ICON_PAIR_SPLIT = "\\:";
+	
 	private final Configuration config;
 	
 	public Settings()
@@ -93,6 +95,11 @@ public class Settings {
 	public String[] getExcludedChannels()
 	{
 		return config.getStringArray(EXCLUDE_CHANNELS);
+	}
+	
+	public String[] getUserIconPairs()
+	{
+		return config.getStringArray(USER_ICON_PAIRS);
 	}
 
 	public int getMaxMessageSize() {
