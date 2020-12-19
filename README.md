@@ -10,5 +10,5 @@ A small service that sends e-mails to slack.
  
 ## Configuration
 See src/main/resources/settings.sample.conf for an example configuration file.
-## Other
-New features (individual icons, more configuration settings) will be added gradually.
+<!-- ## Other
+New features (individual icons, more configuration settings) will be added gradually. -->
